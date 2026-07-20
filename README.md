@@ -1,4 +1,4 @@
-# 🧬 SequenceAlign
+# 🧬 SequenceAlignment
 
 **Alat za poravnanje bioloških sekvenci** — interaktivna web aplikacija koja vizualizira algoritme **Needleman-Wunsch** i **Smith-Waterman** te detektira mutacije u DNA i proteinskim sekvencama.
 
@@ -29,7 +29,7 @@ npm install
 npm start
 ```
 
-Aplikacija se otvara na [http://localhost:3000](http://localhost:3000) i automatski se osvježava pri promjeni koda.
+Aplikacija se otvara na [http://localhost:3000](http://localhost:3000).
 
 ### Ostale naredbe
 
@@ -106,7 +106,3 @@ src/
 - **UniProt REST API** — dohvat proteinskih sekvenci
 
 ---
-
-## 📄 Licenca
-
-Izrađeno u sklopu diplomskog rada *Algoritmi u bioinformatici*.
