@@ -1,70 +1,112 @@
-# Getting Started with Create React App
+# 🧬 SequenceAlign
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+**Alat za poravnanje bioloških sekvenci** — interaktivna web aplikacija koja vizualizira algoritme **Needleman-Wunsch** i **Smith-Waterman** te detektira mutacije u DNA i proteinskim sekvencama.
 
-## Available Scripts
+> Diplomski projekt · Algoritmi u bioinformatici
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## 🚀 Pokretanje
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+Za pokretanje aplikacije lokalno potreban je [Node.js](https://nodejs.org/) (verzija 16 ili novija).
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+### 1. Kloniraj repozitorij
 
-### `npm test`
+```bash
+git clone https://github.com/AntTAnt092/sequence-alignment.git
+cd sequence-alignment
+```
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+### 2. Instaliraj ovisnosti
 
-### `npm run build`
+```bash
+npm install
+```
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+### 3. Pokreni aplikaciju
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+```bash
+npm start
+```
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+Aplikacija se otvara na [http://localhost:3000](http://localhost:3000) i automatski se osvježava pri promjeni koda.
 
-### `npm run eject`
+### Ostale naredbe
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+| Naredba | Opis |
+|---------|------|
+| `npm start` | Pokreće aplikaciju u razvojnom modu |
+| `npm test` | Pokreće testove |
+| `npm run build` | Gradi optimiziranu produkcijsku verziju u `build/` folder |
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
+---
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+## ✨ Značajke
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+- **Dva algoritma poravnanja** — globalno (Needleman-Wunsch) i lokalno (Smith-Waterman)
+- **Usporedni mod** — istovremeni prikaz oba algoritma na istim sekvencama
+- **Vizualizacija matrice** — animirani prikaz punjenja matrice dinamičkog programiranja s istaknutim traceback putem
+- **Heatmap za duge sekvence** — matrica se automatski prebacuje u kompaktni prikaz bojama za velike proteine
+- **Detekcija mutacija** — automatsko pronalaženje supstitucija uz medicinski kontekst (TP53, BRCA1, KRAS)
+- **UniProt integracija** — pretraga i dohvat pravih proteinskih sekvenci po imenu ili ID-u, izravno iz [UniProt](https://www.uniprot.org/) baze
+- **Odabir raspona** — dvostruki slider za analizu odabranog dijela sekvence (od–do)
+- **FASTA upload** — učitavanje sekvenci iz `.fasta` datoteka
+- **Podesivi parametri** — match, mismatch i gap bodovanje
 
-## Learn More
+---
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+## 🧪 Kako se koristi
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+1. **Unesi sekvence** — ručno, kroz medicinske primjere, UniProt pretragu ili FASTA upload
+2. **Odaberi algoritam** — Needleman-Wunsch ili Smith-Waterman (ili oba u usporednom modu)
+3. **Podesi parametre** — bodovanje za match, mismatch i gap
+4. **Pokreni** — aplikacija prikazuje matricu, poravnanje, statistiku sličnosti i detektirane mutacije
 
-### Code Splitting
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+## 🔬 O algoritmima
 
-### Analyzing the Bundle Size
+### Needleman-Wunsch (globalno poravnanje)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Poravnava **cijele** dvije sekvence od početka do kraja. Koristi se kada su sekvence slične duljine i evolucijski srodne. Traceback kreće od donjeg desnog kuta matrice.
 
-### Making a Progressive Web App
+### Smith-Waterman (lokalno poravnanje)
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Pronalazi **najsličniji podniz** unutar dviju sekvenci. Vrijednosti u matrici nikad ne padaju ispod nule, a traceback kreće od pozicije maksimalne vrijednosti. Osnova je alata poput BLAST-a.
 
-### Advanced Configuration
+Oba algoritma temelje se na **dinamičkom programiranju** i imaju vremensku složenost **O(n × m)**.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+---
 
-### Deployment
+## 🗂️ Struktura projekta
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
+```
+src/
+├── App.js                    # Glavna komponenta i upravljanje stanjem
+├── algorithms.js             # NW i SW algoritmi, statistika
+├── constants.js              # Boje i stilovi (light tema)
+├── data.js                   # Medicinski primjeri, UniProt dohvat, FASTA parser
+└── components/
+    ├── Header.jsx            # Zaglavlje
+    ├── Sidebar.jsx           # Bočni izbornik
+    ├── Matrix.jsx            # Vizualizacija DP matrice
+    ├── AlignmentResult.jsx   # Prikaz poravnanja u blokovima
+    ├── MutationPanel.jsx     # Detekcija i opis mutacija
+    ├── UniProtPanel.jsx      # UniProt pretraga i dohvat
+    ├── FastaUpload.jsx       # Upload FASTA datoteka
+    └── AlgorithmsPage.jsx    # Dokumentacija algoritama
+```
 
-### `npm run build` fails to minify
+---
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+## 🛠️ Tehnologije
+
+- **React** — korisničko sučelje
+- **Create React App** — build alat
+- **UniProt REST API** — dohvat proteinskih sekvenci
+
+---
+
+## 📄 Licenca
+
+Izrađeno u sklopu diplomskog rada *Algoritmi u bioinformatici*.
