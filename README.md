@@ -98,11 +98,3 @@ src/
 ```
 
 ---
-
-## 🛠️ Tehnologije
-
-- **React** — korisničko sučelje
-- **Create React App** — build alat
-- **UniProt REST API** — dohvat proteinskih sekvenci
-
----
