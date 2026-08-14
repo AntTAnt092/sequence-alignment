@@ -15,7 +15,9 @@ export function needlemanWunsch(seq1, seq2, match = 2, mismatch = -1, gap = -2) 
     else if (i>0&&dp[i][j]===dp[i-1][j]+gap) { a1=seq1[i-1]+a1; a2="-"+a2; i--; }
     else { a1="-"+a1; a2=seq2[j-1]+a2; j--; }
   }
-  return { matrix: dp, aligned1: a1, aligned2: a2, score: dp[m][n] };
+  // Globalno poravnanje uvijek pokriva cijele sekvence: pozicije 1..duljina
+  return { matrix: dp, aligned1: a1, aligned2: a2, score: dp[m][n],
+           start1: 1, end1: m, start2: 1, end2: n };
 }
 
 export function smithWaterman(seq1, seq2, match = 2, mismatch = -1, gap = -2) {
@@ -29,13 +31,18 @@ export function smithWaterman(seq1, seq2, match = 2, mismatch = -1, gap = -2) {
       if (dp[i][j] > maxScore) { maxScore=dp[i][j]; maxI=i; maxJ=j; }
     }
   let a1="", a2="", i=maxI, j=maxJ;
+  // Kraj lokalnog poravnanja = pozicija maksimuma
+  const end1 = maxI, end2 = maxJ;
   while (i>0&&j>0&&dp[i][j]!==0) {
     const s=seq1[i-1]===seq2[j-1]?match:mismatch;
     if (dp[i][j]===dp[i-1][j-1]+s){a1=seq1[i-1]+a1;a2=seq2[j-1]+a2;i--;j--;}
     else if(dp[i][j]===dp[i-1][j]+gap){a1=seq1[i-1]+a1;a2="-"+a2;i--;}
     else{a1="-"+a1;a2=seq2[j-1]+a2;j--;}
   }
-  return { matrix: dp, aligned1: a1, aligned2: a2, score: maxScore };
+  // Nakon petlje i,j su tik prije početka poravnanja → +1 je prva poravnata pozicija
+  const start1 = i + 1, start2 = j + 1;
+  return { matrix: dp, aligned1: a1, aligned2: a2, score: maxScore,
+           start1, end1, start2, end2 };
 }
 
 export function calcStats(a1, a2) {

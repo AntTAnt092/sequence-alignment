@@ -3,13 +3,13 @@ import { C, s } from "./constants";
 import { needlemanWunsch, smithWaterman, clean } from "./algorithms";
 import { MEDICAL_EXAMPLES } from "./data";
 import Header from "./components/Header";
-import Sidebar from "./components/Sidebar";
 import Matrix from "./components/Matrix";
 import AlignmentResult from "./components/AlignmentResult";
 import MutationPanel from "./components/MutationPanel";
 import UniProtPanel from "./components/UniProtPanel";
 import FastaUpload from "./components/FastaUpload";
-import AlgorithmsPage from "./components/AlgorithmsPage";
+
+const MATRIX_LIMIT = 110; // preko ove duljine matrica se ne prikazuje
 
 export default function App() {
   const [seq1, setSeq1] = useState("ATGCAT");
@@ -27,11 +27,6 @@ export default function App() {
   const [showMatrix, setShowMatrix] = useState(false);
   const [showAlignment, setShowAlignment] = useState(false);
   const [activeMedical, setActiveMedical] = useState(null);
-  const [page, setPage] = useState("app");
-  const [sidebarOpen, setSidebarOpen] = useState(false);
-  const [analysisLen, setAnalysisLen] = useState(60);
-  const [fullLen1, setFullLen1] = useState(0);
-  const [fullLen2, setFullLen2] = useState(0);
   const animRef = useRef(null);
   const resultRef = useRef(null);
 
@@ -82,8 +77,10 @@ export default function App() {
 
   useEffect(()=>()=>clearInterval(animRef.current),[]);
   const fmt = v => v>0?`+${v}`:String(v);
-  const sliderMax = Math.max(fullLen1, fullLen2, 60);
-  const sliderStep = sliderMax > 800 ? 20 : sliderMax > 300 ? 10 : 5;
+
+  // Duljina najduže sekvence — koristi se za odluku o prikazu matrice
+  const maxSeqLen = Math.max(clean(seq1).length, clean(seq2).length);
+  const matrixTooBig = maxSeqLen > MATRIX_LIMIT;
 
   return (
     <div style={s.page}>
@@ -113,8 +110,7 @@ export default function App() {
         }
       `}</style>
 
-      <Sidebar page={page} setPage={setPage} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
-      <Header page={page} sidebarOpen={sidebarOpen} setSidebarOpen={setSidebarOpen}/>
+      <Header/>
 
       <main style={s.main}>
 
@@ -164,43 +160,17 @@ export default function App() {
           </div>
 
           {/* UniProt + FASTA */}
-          {/* UniProt + FASTA */}
           <div style={s.row}>
             <div>
-              <UniProtPanel seqNum={1} analysisLen={analysisLen} onFullLen={setFullLen1}
-                onLoad={v=>{setSeq1(v);setActiveMedical(null);}}/>
+              <UniProtPanel seqNum={1} onLoad={v=>{setSeq1(v);setActiveMedical(null);}}/>
               <FastaUpload seqNum={1} onLoad={v=>{setSeq1(v);setActiveMedical(null);}}/>
             </div>
             <div>
-              <UniProtPanel seqNum={2} analysisLen={analysisLen} onFullLen={setFullLen2}
-                onLoad={v=>{setSeq2(v);setActiveMedical(null);}}/>
+              <UniProtPanel seqNum={2} onLoad={v=>{setSeq2(v);setActiveMedical(null);}}/>
               <FastaUpload seqNum={2} onLoad={v=>{setSeq2(v);setActiveMedical(null);}}/>
             </div>
           </div>
 
-          {/* Zajednički slider za obje sekvence */}
-          {(fullLen1 > 0 || fullLen2 > 0) && (
-            <div style={{marginTop:16, background:"rgba(91,184,255,0.04)",
-              border:`1px solid rgba(91,184,255,0.15)`, borderRadius:10, padding:"12px 16px"}}>
-              <div style={{display:"flex", justifyContent:"space-between", alignItems:"center", marginBottom:6}}>
-                <span style={{...s.label, margin:0}}>Duljina za analizu — obje sekvence</span>
-                <span style={{fontSize:12, fontWeight:700, color:C.blue}}>{analysisLen} aa</span>
-              </div>
-              <input type="range" min={10} max={sliderMax} step={sliderStep}
-                value={Math.min(analysisLen, sliderMax)}
-                onChange={e=>setAnalysisLen(Number(e.target.value))}
-                style={{width:"100%", accentColor:C.blue, cursor:"pointer"}}/>
-              <div style={{display:"flex", justifyContent:"space-between", fontSize:9, color:C.dim, marginTop:2}}>
-                <span>10</span>
-                <span>maks {sliderMax} aa</span>
-              </div>
-              {analysisLen > 400 && (
-                <div style={{fontSize:10, color:"#c05000", marginTop:6}}>
-                  ⚠ Velike sekvence — matrica ima {(analysisLen*analysisLen/1000).toFixed(0)}k+ ćelija, prikaz može biti spor.
-                </div>
-              )}
-            </div>
-          )}
           {/* Algorithm selector */}
           <div style={{marginTop:20}}>
             <label style={s.label}>Algoritam</label>
@@ -285,7 +255,17 @@ export default function App() {
                   </button>
                   {showMatrix && (
                     <div style={{padding:"0 12px 12px"}}>
-                      <Matrix matrix={res.matrix} seq1={clean(seq1)} seq2={clean(seq2)} revealCount={isMain?revealCount:res.matrix.length*res.matrix[0].length}/>
+                      {matrixTooBig ? (
+                        <div style={{padding:"20px 16px",textAlign:"center",fontSize:12,color:C.muted,lineHeight:1.7}}>
+                          ⚠ Matrica se ne prikazuje za sekvence duže od {MATRIX_LIMIT} aa<br/>
+                          <span style={{fontSize:11,color:C.dim}}>
+                            Trenutna duljina: {maxSeqLen} aa · matrica bi imala {(clean(seq1).length * clean(seq2).length / 1000).toFixed(0)}k+ ćelija.
+                            Skratite raspon sekvence za prikaz matrice.
+                          </span>
+                        </div>
+                      ) : (
+                        <Matrix matrix={res.matrix} seq1={clean(seq1)} seq2={clean(seq2)} revealCount={isMain?revealCount:res.matrix.length*res.matrix[0].length}/>
+                      )}
                     </div>
                   )}
                 </div>
@@ -307,7 +287,8 @@ export default function App() {
                     </button>
                     {showAlignment && (
                       <div style={{padding:"0 12px 12px"}}>
-                        <AlignmentResult a1={res.aligned1} a2={res.aligned2}/>
+                        <AlignmentResult a1={res.aligned1} a2={res.aligned2}
+                          start1={res.start1} end1={res.end1} start2={res.start2} end2={res.end2}/>
                         {isMain && <MutationPanel a1={res.aligned1} a2={res.aligned2} example={activeMedical}/>}
                       </div>
                     )}
@@ -319,12 +300,9 @@ export default function App() {
         )}
       </main>
 
-      {page==="algorithms" && <AlgorithmsPage onBack={()=>setPage("app")}/>}
-
       <footer style={{borderTop:`1px solid ${C.border}`,padding:"16px 24px",textAlign:"center",fontSize:11,color:C.dim,marginTop:8}}>
         Sequence Alignment Tool · Algoritmi u Bioinformatici · Diplomski projekt
       </footer>
     </div>
-    
   );
 }
