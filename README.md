@@ -87,7 +87,7 @@ Poravnanje sekvenci jedan je od najtemeljnijih problema u bioinformatici i molek
 
 **Razvoj lijekova i cjepiva** — poravnanje se koristi za pronalaženje konzerviranih regija u proteinima (dijelova koji se ne mijenjaju), koje su idealne mete za lijekove i cjepiva.
 
-Vrijednost ove aplikacije je prvenstveno **edukacijska**: umjesto da samo ispiše rezultat, ona *vizualizira kako* algoritmi rade — animirano punjenje matrice, traceback put, heatmap za velike sekvence. Time premošćuje jaz između apstraktne teorije dinamičkog programiranja i njezine praktične primjene u kliničkoj genetici i istraživanju.
+Vrijednost ove aplikacije je prvenstveno **edukacijska**: umjesto da samo ispiše rezultat, ona *vizualizira kako* algoritmi rade — animirano punjenje matrice, traceback put, heatmap za velike sekvence.
 
 ---
 
@@ -101,13 +101,7 @@ Projekt je zamišljen kao proširiva osnova. Neki od smjerova u kojima bi se mog
 
 Aplikacija je izrađena kao **jednostranična aplikacija (SPA)** u Reactu. Cjelokupno stanje aplikacije (unesene sekvence, odabrani algoritam, parametri bodovanja, rezultati) upravlja se centralno u glavnoj komponenti `App.js` pomoću React Hookova (`useState`, `useEffect`, `useRef`), a podaci se prosljeđuju djeci kroz props.
 
-Kod je podijeljen u tri sloja:
-
-**Sloj logike** (`algorithms.js`, `data.js`) — sadrži čiste funkcije za oba algoritma poravnanja, izračun statistike, detekciju mutacija, dohvat s UniProt baze i parsiranje FASTA datoteka. Ovaj sloj ne ovisi o Reactu i mogao bi se koristiti samostalno.
-
-**Sloj prezentacije** (`components/`) — skup React komponenti od kojih svaka ima jednu odgovornost: prikaz matrice, prikaz poravnanja, panel za mutacije, UniProt pretraga i slično.
-
-**Sloj stila** (`constants.js`) — sve boje i stilovi centralizirani su u dva objekta (`C` za boje, `s` za stilove), koje sve komponente dijele. Time se izbjegava potreba za zasebnim CSS datotekama po komponenti i osigurava jednak izgled kroz cijelu aplikaciju.
+Kod je podijeljen u tri sloja: logika (`algorithms.js`, `data.js`), prezentacija (`components/`), stil (`constants.js`).
 
 ### Struktura datoteka
 
