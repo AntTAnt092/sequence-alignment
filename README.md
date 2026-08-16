@@ -83,8 +83,6 @@ Poravnanje sekvenci jedan je od najtemeljnijih problema u bioinformatici i molek
 
 **Detekcija bolesti i mutacija** — usporedbom pacijentove DNA s referentnim genomom otkrivaju se mutacije koje uzrokuju rak ili nasljedne bolesti. Medicinski primjeri u aplikaciji (TP53, BRCA1, KRAS) demonstriraju upravo taj proces — svaka od tih mutacija je klinički poznata i povezana s razvojem karcinoma.
 
-**Evolucijska biologija** — usporedbom istog gena kod različitih vrsta određuje se koliko su vrste srodne i grade se filogenetska stabla. Što je poravnanje sličnije, to su vrste bliže u evoluciji.
-
 **Pretraživanje baza podataka** — kada znanstvenik otkrije nepoznatu sekvencu, pretražuje baze (poput UniProt-a) za slične poznate sekvence kako bi pretpostavio funkciju. Integracija s UniProt bazom u ovoj aplikaciji dodiruje upravo taj svijet, s pristupom stvarnim sekvencama.
 
 **Razvoj lijekova i cjepiva** — poravnanje se koristi za pronalaženje konzerviranih regija u proteinima (dijelova koji se ne mijenjaju), koje su idealne mete za lijekove i cjepiva.
@@ -95,22 +93,7 @@ Vrijednost ove aplikacije je prvenstveno **edukacijska**: umjesto da samo ispiš
 
 ## Mogućnosti daljnjeg razvoja
 
-Projekt je zamišljen kao proširiva osnova. Neki od smjerova u kojima bi se mogao razvijati:
-
-**Dodatni algoritmi poravnanja:**
-
-- **Gotoh (affine gap penalty)** — realističniji model kaznjavanja praznina, gdje otvaranje praznine košta više od njezinog produljivanja. Biološki točnije jer je jedna duga insercija vjerojatnija od više kratkih. Direktno nadograđuje postojeći kod.
-- **Hirschberg** — inačica Needleman-Wunscha koja koristi linearnu memoriju O(n) umjesto O(n×m), što omogućuje poravnanje mnogo dužih sekvenci bez opterećenja memorije.
-- **BLAST-ov pristup (seed-and-extend)** — heuristička metoda za brzo pretraživanje velikih baza, koja pronalazi kratka podudaranja pa ih proširuje. Omogućila bi rad s realnim genomskim bazama.
-- **Multiple sequence alignment (ClustalW / MUSCLE)** — poravnanje tri ili više sekvenci istovremeno, temelj filogenetske analize.
-
-**Ostala proširenja:**
-
-- **Supstitucijske matrice** (BLOSUM, PAM) — umjesto fiksnog match/mismatch bodovanja, koristiti biološki utemeljene matrice koje različito vrednuju zamjene aminokiselina.
-- **Izvoz rezultata** — spremanje poravnanja u standardne formate (FASTA, Clustal, PDF izvještaj).
-- **Dot-plot vizualizacija** — grafički prikaz sličnosti između dviju sekvenci.
-- **Optimizacija prikaza velikih matrica** — renderiranje heatmapa na `<canvas>` elementu za znatno brži prikaz vrlo velikih proteina.
-- **Filogenetsko stablo** — automatsko generiranje stabla srodnosti iz više poravnanih sekvenci.
+Projekt je zamišljen kao proširiva osnova. Neki od smjerova u kojima bi se mogao razvijati je dodavanje dodatnih algoritama poravnanja, supstitucijske matrice, izvoz rezultata te dot-plot vizualizacija.
 
 ---
 
@@ -143,14 +126,6 @@ src/
     └── FastaUpload.jsx       # Upload FASTA datoteka
 ```
 
-### Tok podataka
-
-1. Korisnik unosi sekvence (ručno, UniProt, FASTA ili medicinski primjeri) → `App.js` sprema u stanje
-2. Klikom na *Pokreni*, `App.js` poziva algoritam iz `algorithms.js`
-3. Rezultat (matrica, poravnanje, score, pozicije) sprema se u stanje
-4. Komponente `Matrix`, `AlignmentResult` i `MutationPanel` primaju rezultat kroz props i prikazuju ga
-5. Animacija punjenja matrice postiže se postupnim povećavanjem brojača (`revealCount`) preko `setInterval`
-
 ---
 
 ## Korištene tehnologije
@@ -161,9 +136,7 @@ src/
 | **JavaScript (ES6+)** | Programski jezik — algoritmi, logika, dohvat podataka |
 | **Create React App** | Alat za postavljanje i build projekta |
 | **UniProt REST API** | Dohvat pravih proteinskih sekvenci iz baze podataka |
-| **CSS-in-JS (inline stilovi)** | Stiliziranje kroz JavaScript objekte u `constants.js` |
 | **Google Fonts** | Fontovi *IBM Plex Mono*, *Syne* i *Orbitron* |
-| **Git / GitHub** | Verzioniranje koda i hosting repozitorija |
 
 Aplikacija ne koristi vanjske biblioteke za algoritme ni vizualizaciju — oba algoritma poravnanja, matrica, heatmap i prikaz poravnanja implementirani su ručno, čistim JavaScriptom i Reactom.
 
