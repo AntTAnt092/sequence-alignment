@@ -37,7 +37,6 @@ Aplikacija se otvara na [http://localhost:3000](http://localhost:3000) i automat
 |---------|------|
 | `npm start` | Pokreće aplikaciju u razvojnom modu |
 | `npm test` | Pokreće testove |
-| `npm run build` | Gradi optimiziranu produkcijsku verziju u `build/` folder |
 
 ---
 
