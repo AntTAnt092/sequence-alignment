@@ -1,8 +1,8 @@
 # 🧬 SequenceAlignment
 
-**Alat za poravnanje bioloških sekvenci** — interaktivna web aplikacija koja vizualizira algoritme **Needleman-Wunsch** i **Smith-Waterman** te detektira mutacije u DNA i proteinskim sekvencama.
+**Alat za poravnanje i analizu bioloških sekvenci** — interaktivna web aplikacija koja vizualizira algoritme **Needleman-Wunsch** i **Smith-Waterman** te detektira mutacije u DNA i proteinskim sekvencama.
 
-> Diplomski projekt · Algoritmi u bioinformatici
+> Završni projekt
 
 ---
 
